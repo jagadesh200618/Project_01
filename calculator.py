@@ -1,41 +1,90 @@
+from enum import Enum
+from typing import Optional
 
-import numpy as np
+class Operation(Enum):
+    Order = 1,
+    Division = 2,
+    Multiply = 3,
+    Addition = 4,
+    Subraction = 5,
 
-class Calculator:
+
+class TreeNode:
+    def __init__(self, data, left, right):
+        self.data: Operation = data
+        self.left = left
+        self.right = right
+
+    def eval(self):
+        if self.data == Operation.Order:
+            return self.left ** self.right
+        elif self.data == Operation.Division:
+            if self.right == 0: return ZeroDivisionError
+            return self.left / self.right
+        elif self.data == Operation.Multiply:
+            return self.left * self.right
+        elif self.data == Operation.Subraction:
+            return self.left - self.right
+        elif self.data == Operation.Addition:
+            return self.left + self.right
+
+    def __str__(self):
+        if self.data == Operation.Order:
+            return f"{self.left} ** {self.right}"
+        elif self.data == Operation.Division:
+            return f"{self.left} / {self.right}"
+        elif self.data == Operation.Multiply:
+            return f"{self.left} * {self.right}"
+        elif self.data == Operation.Subraction:
+            return f"{self.left} - {self.right}"
+        elif self.data == Operation.Addition:
+            return f"{self.left} + {self.right}"
+        return ""
+
+
+class BinaryTree:
     def __init__(self):
-        history = {}
+        self.tree: Optional[TreeNode] = None
 
-    # 1. Addition
-    def add(self, a, b):
-        return a + b
+    def parser(self, inp):
+        tokens = BinaryTree.tokenize(inp)
+        for i in tokens:
+            self.append(i)
+        return self.tree
 
-    # 2. Subraction
-    def sub(self, a, b):
-        return a - b
+    def append(self, token):
+        pass
 
-    # 3. Multiplication
-    def mul(self, a, b):
-        return a * b
+    @staticmethod
+    def tokenize(inp):
+        token = []
+        digit = ""
+        for i in inp:
+            if i.isspace():
+                continue
+            elif i.isdigit():
+                digit += i
+            elif not i.isdigit():
+                if digit != "":
+                    token.append(eval(digit))
+                    digit = ""
+                if i == "+":
+                    token.append(Operation.Addition)
+                elif i == "-":
+                    token.append(Operation.Subraction)
+                elif i == "*":
+                    token.append(Operation.Multiply)
+                elif i == "/":
+                    token.append(Operation.Division)
+                elif i == "**":
+                    token.append(Operation.Order)
+                else:
+                    token.append(i)
+        return token
 
-    # 4. Division
-    def div(self, a, b):
-        if b == 0:
-            return ZeroDivisionError
-        else:
-            return a/b
+    def eval(self):
+        pass
 
-    # 5. Moduls Division
-    def mod(self, a, b):
-        return a % b
 
-    # 6. Square
-    def square(self, x):
-        return x ** 2
-
-    # 7. Square Root
-    def sqrt(self, x):
-        return np.sqrt(x)
-
-    # 8. Percentage
-    def percentage(self, x):
-        return x / 100
+x = BinaryTree.tokenize("23 + 34 + 44 - 67 / 34 * 35")
+print(x)
