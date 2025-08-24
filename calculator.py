@@ -9,6 +9,7 @@ class Operation(Enum):
     Subraction = 5,
 
 
+
 class TreeNode:
     def __init__(self, data, left, right):
         self.data: Operation = data

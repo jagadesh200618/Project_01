@@ -1,18 +1,28 @@
-import streamlit as st
-from calculator import Calculator
-st.text_input("Enter", key="name")
+import flet as ft
 
-st.button("Submit", on_click=print())
+def main(page: ft.Page):
+    page.title = "Flet counter example"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-st.session_state.name
+    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
 
-# 23 + 34 + 44 - 67 / (34 * 35)
-# BODMAS
+    def minus_click(e):
+        txt_number.value = str(int(txt_number.value) - 1)
+        page.update()
 
-def InputString(inp: str):
-    c = Calculator()
-    text = list(map(lambda x: x.strip(), inp.split("+")))
-    print(text)
+    def plus_click(e):
+        txt_number.value = str(int(txt_number.value) + 1)
+        page.update()
 
+    page.add(
+        ft.Row(
+            [
+                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
+                txt_number,
+                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+    )
 
-InputString("23 + 34 + 44 - 67 / (34 * 35)")
+ft.app(main)
